@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ========== Base ========== */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== Theme Transition ========== */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+
+/* ========== Custom Scrollbar ========== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.6);
+}
+
+/* ========== Price Colors ========== */
+.price-up {
+  color: #26a69a;
+}
+
+.price-down {
+  color: #ef5350;
+}
+
+.price-neutral {
+  color: inherit;
+}
+
+/* ========== Gradient Stat Cards ========== */
+.stat-card-green {
+  background: linear-gradient(135deg, #26a69a 0%, #2dd4a8 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card-red {
+  background: linear-gradient(135deg, #ef5350 0%, #ff7043 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card-blue {
+  background: linear-gradient(135deg, #42a5f5 0%, #5c6bc0 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card-gold {
+  background: linear-gradient(135deg, #ffa726 0%, #ffca28 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* ========== Hoverable Card ========== */
+.hoverable-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hoverable-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* ========== Page Enter Animation ========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ========== Number Loading Pulse ========== */
+@keyframes numberPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.number-loading {
+  animation: numberPulse 1.5s ease-in-out infinite;
+}
+
+/* ========== Value Glow ========== */
+.value-glow-green {
+  text-shadow: 0 0 8px rgba(38, 166, 154, 0.6);
+}
+
+.value-glow-red {
+  text-shadow: 0 0 8px rgba(239, 83, 80, 0.6);
+}
+
+/* ========== Sidebar Logo ========== */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #42a5f5 0%, #7c4dff 50%, #26a69a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+/* ========== App Header ========== */
+.app-header {
+  position: relative;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #42a5f5, #7c4dff, #26a69a);
+  opacity: 0.6;
+}
+
+/* ========== Responsive Helpers ========== */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .show-mobile-only {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* ========== Ant Design Overrides ========== */
+
+/* Hide sidebar menu scrollbar */
+.ant-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.ant-menu {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Table row hover transition */
+.ant-table-tbody > tr {
+  transition: background-color 0.2s ease;
+}
+
+.ant-table-tbody > tr:hover > td {
+  transition: background-color 0.2s ease;
+}
