@@ -30,7 +30,7 @@ celery_app.conf.update(
     timezone="UTC",
     enable_utc=True,
 
-    # Broker connection retry on startup (required for Celery 6.0+).
+    # Broker connection retry on startup (Celery 5.3+, required in 6.0+).
     broker_connection_retry_on_startup=True,
 
     # Default queue – must match the queues the worker listens on.
