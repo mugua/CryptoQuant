@@ -1,0 +1,34 @@
+{
+  "name": "cryptoquant-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "antd": "^5.12.0",
+    "@ant-design/icons": "^5.2.6",
+    "@ant-design/plots": "^2.2.0",
+    "zustand": "^4.4.7",
+    "react-router-dom": "^6.21.1",
+    "react-i18next": "^14.0.0",
+    "i18next": "^23.7.16",
+    "i18next-browser-languagedetector": "^7.2.1",
+    "lightweight-charts": "^4.1.3",
+    "axios": "^1.6.3",
+    "dayjs": "^1.11.10",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "eslint": "^8.56.0"
+  }
+}
