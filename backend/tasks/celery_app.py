@@ -5,9 +5,53 @@ Uses Redis as both the message broker and the result backend, matching the
 settings defined in ``app.config``.
 """
 
+import os
+
 from celery import Celery
+from celery.signals import celeryd_init, worker_ready, worker_shutdown
 
 from app.config import get_settings
+
+# ---------------------------------------------------------------------------
+# Lightweight file-based health check for Docker
+# ---------------------------------------------------------------------------
+# ``celery inspect ping`` is too heavy for a Docker health check: every
+# invocation starts a full Python process, imports all task modules (pandas,
+# numpy, ccxt …), and opens a new broker connection.  A simple file-based
+# check avoids all of that.
+#
+#   • celeryd_init  → remove stale file left by a crashed worker
+#   • worker_ready  → create the file (worker can now process tasks)
+#   • worker_shutdown → remove the file on graceful shutdown
+#
+# The Docker health check is just: test -f /tmp/celery_worker_ready
+# ---------------------------------------------------------------------------
+HEALTHCHECK_FILE = "/tmp/celery_worker_ready"
+
+
+@celeryd_init.connect
+def _remove_stale_healthcheck(**kwargs):
+    try:
+        os.remove(HEALTHCHECK_FILE)
+    except OSError:
+        pass
+
+
+@worker_ready.connect
+def _mark_worker_ready(**kwargs):
+    try:
+        with open(HEALTHCHECK_FILE, "w"):
+            pass
+    except OSError:
+        pass
+
+
+@worker_shutdown.connect
+def _mark_worker_shutdown(**kwargs):
+    try:
+        os.remove(HEALTHCHECK_FILE)
+    except OSError:
+        pass
 
 settings = get_settings()
 

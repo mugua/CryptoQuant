@@ -80,9 +80,9 @@ services:
       --concurrency=4
       --queues=default,high_priority,low_priority
     healthcheck:
-      test: ["CMD", "celery", "-A", "tasks.celery_app", "inspect", "ping", "--timeout", "10"]
-      interval: 30s
-      timeout: 30s
+      test: ["CMD-SHELL", "test -f /tmp/celery_worker_ready"]
+      interval: 10s
+      timeout: 5s
       retries: 5
       start_period: 60s
 
