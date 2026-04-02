@@ -11,7 +11,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
-        # tini is used by Docker's init: true to reap zombies & forward signals
+        # tini provides a proper init process for signal forwarding and zombie
+        # reaping — essential for Celery's prefork worker pool in containers.
         tini && \
     rm -rf /var/lib/apt/lists/*
 
