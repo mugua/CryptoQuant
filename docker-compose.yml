@@ -84,14 +84,16 @@ services:
         "--loglevel=info",
         "--concurrency=4",
         "--queues=default,high_priority,low_priority",
+        "--without-mingle",
+        "--without-gossip",
       ]
     stop_grace_period: 30s
     healthcheck:
       test: ["CMD-SHELL", "test -f /tmp/celery_worker_ready"]
       interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 120s
+      retries: 5
+      start_period: 30s
 
   celery_beat:
     <<: *backend-common

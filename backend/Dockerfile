@@ -21,5 +21,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Run as non-root user — Celery's prefork pool can fail when forking as root
+# and the worker emits a SecurityWarning that blocks startup on some systems.
+RUN groupadd --system celery && \
+    useradd --system --gid celery --home-dir /app celery && \
+    chown -R celery:celery /app
+USER celery
+
 ENTRYPOINT ["tini", "--"]
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
