@@ -1,0 +1,26 @@
+# Keep the Docker build context clean — exclude dev/local artifacts that
+# should never end up in the production image.
+
+.env
+.env.*
+*.env
+
+__pycache__/
+*.pyc
+*.pyo
+
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+tests/
+
+.git/
+.gitignore
+.dockerignore
+
+*.md
+LICENSE
+Makefile

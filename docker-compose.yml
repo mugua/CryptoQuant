@@ -74,11 +74,15 @@ services:
 
   celery_worker:
     <<: *backend-common
-    command: >
-      celery -A tasks.celery_app worker
-      --loglevel=info
-      --concurrency=4
-      --queues=default,high_priority,low_priority
+    init: true
+    command:
+      [
+        "celery", "-A", "tasks.celery_app", "worker",
+        "--loglevel=info",
+        "--concurrency=4",
+        "--queues=default,high_priority,low_priority",
+      ]
+    stop_grace_period: 30s
     healthcheck:
       test: ["CMD-SHELL", "test -f /tmp/celery_worker_ready"]
       interval: 10s
@@ -88,10 +92,13 @@ services:
 
   celery_beat:
     <<: *backend-common
-    command: >
-      celery -A tasks.celery_app beat
-      --loglevel=info
-      --scheduler celery.beat:PersistentScheduler
+    init: true
+    command:
+      [
+        "celery", "-A", "tasks.celery_app", "beat",
+        "--loglevel=info",
+        "--scheduler", "celery.beat:PersistentScheduler",
+      ]
     depends_on:
       postgres:
         condition: service_healthy
