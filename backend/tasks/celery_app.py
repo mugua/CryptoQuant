@@ -66,6 +66,10 @@ celery_app = Celery(
     ],
 )
 
+# Alias for standard Celery app discovery — ``celery -A tasks.celery_app``
+# looks for ``module.app`` first, so this avoids a slower fallback scan.
+app = celery_app
+
 celery_app.conf.update(
     # Serialisation.
     task_serializer="json",

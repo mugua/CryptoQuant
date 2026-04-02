@@ -6,9 +6,11 @@ x-backend-common: &backend-common
   build:
     context: ./backend
     dockerfile: Dockerfile
-  env_file: .env
+  env_file:
+    - path: .env
+      required: false
   environment:
-    DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-cryptoquant}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-cryptoquant}
     REDIS_URL: redis://redis:6379/0
     CELERY_BROKER_URL: redis://redis:6379/1
     CELERY_RESULT_BACKEND: redis://redis:6379/2
@@ -25,17 +27,19 @@ services:
   # ---------------------------------------------------------------------------
   postgres:
     image: postgres:15-alpine
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-cryptoquant}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-cryptoquant}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cryptoquant} -d ${POSTGRES_DB:-cryptoquant}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,7 +78,6 @@ services:
 
   celery_worker:
     <<: *backend-common
-    init: true
     command:
       [
         "celery", "-A", "tasks.celery_app", "worker",
@@ -92,7 +95,6 @@ services:
 
   celery_beat:
     <<: *backend-common
-    init: true
     command:
       [
         "celery", "-A", "tasks.celery_app", "beat",
@@ -114,7 +116,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     ports:
       - "3000:80"
     depends_on:
