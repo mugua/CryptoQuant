@@ -5,12 +5,15 @@ Uses Redis as both the message broker and the result backend, matching the
 settings defined in ``app.config``.
 """
 
+import logging
 import os
 
 from celery import Celery
 from celery.signals import celeryd_init, worker_ready, worker_shutdown
 
 from app.config import get_settings
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Lightweight file-based health check for Docker
@@ -33,8 +36,10 @@ HEALTHCHECK_FILE = "/tmp/celery_worker_ready"
 def _remove_stale_healthcheck(**kwargs):
     try:
         os.remove(HEALTHCHECK_FILE)
-    except OSError:
+    except FileNotFoundError:
         pass
+    except OSError as exc:
+        logger.warning("Failed to remove stale healthcheck file: %s", exc)
 
 
 @worker_ready.connect
@@ -42,16 +47,19 @@ def _mark_worker_ready(**kwargs):
     try:
         with open(HEALTHCHECK_FILE, "w"):
             pass
-    except OSError:
-        pass
+        logger.info("Healthcheck file created: %s", HEALTHCHECK_FILE)
+    except OSError as exc:
+        logger.error("Failed to create healthcheck file: %s", exc)
 
 
 @worker_shutdown.connect
 def _mark_worker_shutdown(**kwargs):
     try:
         os.remove(HEALTHCHECK_FILE)
-    except OSError:
+    except FileNotFoundError:
         pass
+    except OSError as exc:
+        logger.warning("Failed to remove healthcheck file on shutdown: %s", exc)
 
 settings = get_settings()
 
