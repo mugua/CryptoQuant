@@ -82,6 +82,7 @@ services:
       [
         "celery", "-A", "tasks.celery_app", "worker",
         "--loglevel=info",
+        "--pool=threads",
         "--concurrency=2",
         "--queues=default,high_priority,low_priority",
         "--without-mingle",
